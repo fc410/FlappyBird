@@ -239,7 +239,6 @@ def main_game(bird_color):
         clock.tick(120)
 
 
-
 main_menu()
 
 pygame.quit()
