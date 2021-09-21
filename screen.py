@@ -15,6 +15,7 @@ class UIScreen:
         pygame.image.load('images/background-day.png'), (574, 800)
     ).convert_alpha()
 
+
     # loading the floor surface for later use
     floor_surface = pygame.transform.scale2x(
         pygame.image.load('images/base.png')
