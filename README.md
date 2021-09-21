@@ -1,6 +1,6 @@
-# flappyBird
+# FlappyBird
 <hr>
-## Main Menu:
+##Main Menu:
 A user will be greeted with the main menu screen which displays main menu, the current high score, and will be asked to pick from three different 
 colored birds; between a blue, red, and yellow bird.Once the user left clicks between these birds the user will be able to use that bird in the 
 main game and the main_game function will trigger
