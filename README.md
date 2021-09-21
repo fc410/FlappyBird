@@ -1,4 +1,4 @@
-# FlappyBird
+<h1> FlappyBird</h1>
 <hr>
 <h2> Main Menu</h2>
 
