@@ -53,13 +53,13 @@ class Pipe:
         """
         This function moves the pipes at 5 pixels per frames to make its
         seem like the pipes are moving and increases the score if the pipes
-        is less than or equal to 300 pixels
+        is equal to 90 pixels
         :param pipes: A list of pipes to move all the pipes in the list
         :param score: An integer value that shows the current score of the player
         :return: Returns the pipe list with all pipes moved 5 pixels to the left
         """
         for pipe in pipes:
             pipe.centerx -= 5
-            if pipe.centerx <= 300:
+            if pipe.centerx == 90:
                 score += 1
         return pipes

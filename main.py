@@ -103,58 +103,97 @@ def main_menu():
 
 def main_game(bird_color):
     """
-    This function handles all the main game events. A user will
+    This function handles all the main game events. A user will use the same bird
+    they picked and jump 9 pixels everytime the spacebar is clicked and makes
+    a wing flap sound effect. If the user manages to jump through the pipes they
+    will get one point and the point sound effect will play. If the score is
+    higher than the highscore the score should replace the current highscore stored
+    in the flappybird database. If the bird happens to touch one of the pipes, touches
+    the roof or the floor the death sound effect will play and the game displays a
+    game over screen and if the user want to play again they simply need to press the
+    spacebar again.
     :param bird_color:
     :return:
     """
+    # Creates the display screen and setting the screen caption to FlappyBird
     screen = pygame.display.set_mode((574, 800))
     pygame.display.set_caption('FlappyBird')
-    main_screen = UIScreen(screen)
-    game_active = True
 
+    # Creating a UIScreen object name main_screen
+    main_screen = UIScreen(screen)
+
+    # game variables
+    game_active = True
+    game_over_rect = main_screen.game_over_surface.get_rect(center=(288, 350))
+    pipe_list = []
+
+    # making a Bird object using the bird_color given
     main_bird = Bird(bird_color)
 
-    pipe_list = []
+    # Creating a Pipe object named main_pipes
     main_pipes = Pipe(pipe_list)
-    game_over_rect = main_screen.game_over_surface.get_rect(center=(288, 350))
 
     while True:
+        # Handling game events
         for event in pygame.event.get():
+            # Checking if the game was exited
             if event.type == pygame.QUIT:
+                # If the score is greater than the high score then update the database
                 if main_screen.score > main_screen.high_score:
                     cursor.execute("UPDATE HighScore SET  highscore={} WHERE place=1".format(main_screen.score))
                 db.commit()
+                # Exit out of pygame
                 pygame.quit()
                 sys.exit()
 
+            # Checking to see if a key was pressed from the keyboard
             if event.type == pygame.KEYDOWN:
+                # Checking to see if the spacebar was pressed and if the game is currently active
                 if event.key == pygame.K_SPACE and game_active:
+                    # Making sure the bird moves exactly 9 pixels with spacebar is pressed
                     main_bird.bird_movement = 0
                     main_bird.bird_movement -= 9
+                    # Play the bird flapping sound
                     main_bird.flap_sound()
+                # Escape key handling
                 if event.key == pygame.K_ESCAPE:
+                    # Go back to the menu when escape is pressed
                     main_menu()
 
+                # Spacebar pressed and game is not currently active
                 if event.key == pygame.K_SPACE and not game_active:
+                    # Change game active back to True
                     game_active = True
+                    # Clear the pipe list
                     main_pipes.pipe_list.clear()
+                    # Move the bird back to the starting point
                     main_bird.bird_rect.center = (100, 400)
+                    # Reset the bird movement and score
                     main_bird.bird_movement = 0
                     main_screen.score = 0
 
+            # SPAWNPIPE event handling
             if event.type == SPAWNPIPE:
+                # Use the create_pipe function from the Pipe class to append to the
+                # pipe list
                 main_pipes.pipe_list.extend(main_pipes.create_pipe(pipe_surface, pipe_height))
 
+            # BIRDFLAP event handling
             if event.type == BIRDFLAP:
+                # if bird index is less than  two then increment bird_index by one
+                # otherwise reset the bird_index back to zero
                 if main_bird.bird_index < 2:
                     main_bird.bird_index += 1
                 else:
                     main_bird.bird_index = 0
 
+                # Get the next bird from the bird frames for animation
                 main_bird.bird_surface, main_bird.bird_rect = main_bird.bird_animation()
 
+        # Draw the background on the screen
         main_screen.screen.blit(main_screen.back_ground_surface, (0, 0))
 
+        # Handling for when the game is currently active
         if game_active:
             # Bird Handling
             main_bird.bird_movement += main_bird.gravity
@@ -169,31 +208,38 @@ def main_game(bird_color):
 
             # Handling Score
             for pipe in main_pipes.pipe_list:
-                if pipe.centerx == 100:
+                if pipe.centerx == 90:
                     main_screen.score += 1
                     main_bird.scoring_sound()
                     break
 
+            # Display the mainGame score display
             main_screen.score_display('mainGame')
-        else:
-            main_screen.screen.blit(main_screen.game_over_surface, game_over_rect)
-            main_screen.high_score = main_screen.update_score()
-            main_screen.score_display('gameOver')
-            if main_screen.score > main_screen.high_score:
-                # database handling
-                cursor.execute("UPDATE HighScore SET highscore={} WHERE place=1".format(main_screen.score))
-                db.commit()
 
+        # Handling for when game is not currently active
+        else:
+            # Draw the game over image to the screen
+            main_screen.screen.blit(main_screen.game_over_surface, game_over_rect)
+            # Update the database if the score is greater than the highscore
+            main_screen.high_score = main_screen.update_score()
+            # Draw the gameOver text on the screen
+            main_screen.score_display('gameOver')
+
+        # move the floor x position by 1 every frame
         main_screen.floor_x_pos -= 1
+        # Draws the floor on the screen
         main_screen.draw_floor()
+        # If the floor x position reaches -575 then reset it back to zero
         if main_screen.floor_x_pos <= -575:
             main_screen.floor_x_pos = 0
 
+        # Make all the updates visible
         pygame.display.update()
+        # The clock tick should not exceed 120 frames per second
         clock.tick(120)
 
 
-while True:
-    main_menu()
+
+main_menu()
 
 pygame.quit()
