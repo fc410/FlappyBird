@@ -16,6 +16,7 @@ wants to play again then they simply need to press spacebar again.
 
 If the user presses the escape key while the game is active or the game over screen is shown then they will be prompted back to the main menu screen where they
 can choose from one of the birds once again.
+<hr>
 
 <h3> Built With:</h3>
 <ul>
