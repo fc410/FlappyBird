@@ -22,4 +22,5 @@ can choose from one of the birds once again.
 <ul>
   <li>Python</li>
   <li>Pygame library</li>
+  <li>MySQL</li>
 </ul>
