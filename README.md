@@ -18,7 +18,7 @@ If the user presses the escape key while the game is active or the game over scr
 can choose from one of the birds once again.
 <hr>
 
-<h3> Built With:</h3>
+<h3> Tech Stack:</h3>
 <ul>
   <li>Python</li>
   <li>Pygame library</li>
